@@ -15,6 +15,8 @@ const defaultExts = ['.jpg', '.png']
 
 const delay = timeout => new Promise(resolve => setTimeout(resolve, timeout))
 
+const defaultParallel = 3
+
 const instance = axios.create({
     timeout: 10000
 })
@@ -150,19 +152,17 @@ const compressImage = async (imgPath, targetPath, log = false) => {
     }
 }
 
-const compressImageList = async (imgList, exts = ['.png', '.jpg'], parallel = 2) => {
+const compressImageList = async (imgList, exts = ['.png', '.jpg'], parallel = 2, maxLength = 20) => {
     const errorList = []
     let totalInputSize = 0
     let totalOutputSize = 0
     let index = 0
     let resolveCount = 0
     let error = ''
+    let curLength = 0
     const resolveOneImage = async (imgPath, index, total) => {
         let compressInfo = null
         try {
-            if (index === 3) {
-                throw new Error("test error")
-            }
             compressInfo = await compressImage(imgPath, imgPath)
         } catch (e) {
             error = e
@@ -176,7 +176,8 @@ const compressImageList = async (imgList, exts = ['.png', '.jpg'], parallel = 2)
                 program.log && compressInfo.log()
             } else {
                 console.log(chalk`    \n{red compress failed!
-    ${error}}\n`)
+    path: ${imgPath}
+    error message: ${error}}\n`)
             }
         }
         return compressInfo
@@ -192,6 +193,7 @@ const compressImageList = async (imgList, exts = ['.png', '.jpg'], parallel = 2)
             imgList[index].index = index
             tempIndex++
             index++
+            curLength++
         }
         let startIndex = index - tempImages.length + 1
         const spinner = ora(`compressing ${startIndex}-${index}[${imgList.length}]`).start()
@@ -202,6 +204,7 @@ const compressImageList = async (imgList, exts = ['.png', '.jpg'], parallel = 2)
                 totalOutputSize += compressInfo.outputSize   
             }
         }))
+        await delay(2000)
         spinner.stop()
     }
     return {
@@ -242,15 +245,11 @@ const compressImageInDir = async (dirPath, exts = ['.png', '.jpg'], parallel = 2
                 break
             }
         }
-        delay(300)
     }
 }
 
-const defaultParallel = 3
-
 const cmdResolve = async () => {
     const args = program.args.slice(0, program.args.length - 1)
-    console.log(program.parallel)
     let parallel = Number(program.parallel)
     if (isNaN(parallel)) {
         console.error('warn: option -p, --parallel should be an integer, default 3 is used')
