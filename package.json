@@ -6,14 +6,22 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "img-cmps": "./main.js"
+  },
+  "preferGlobal": true,
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
     "chalk": "^2.4.2",
+    "cli-spinner": "^0.2.8",
     "commander": "^2.19.0",
     "fs-extra": "^7.0.1",
+    "inquire": "^0.4.8",
+    "inquirer": "^6.2.1",
     "klaw-sync": "^6.0.0",
-    "tinify": "^1.6.0-beta.2"
+    "ora": "^3.0.0",
+    "prompt": "^1.0.0"
   }
 }
