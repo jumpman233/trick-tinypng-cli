@@ -97,8 +97,8 @@ const compressImage = async (imgPath, targetPath) => {
         let imgBuffer = await getImageBuffer(imgUrl)
         writeImage(imgBuffer, targetPath)
         let compressInfo = new CompressInfo(imgPath, imgData.input.size, imgData.output.size)
-        debugLog(chalk`{yellow path: ${imgPath}}`)
-        debugLog(compressInfo.info())
+        detailLog(chalk`\n{yellow path: ${imgPath}}`)
+        detailLog(compressInfo.info())
         return compressInfo
     } catch (e) {
         // log && console.error(`compressImage failed! imgPath: ${imgPath}, ${targetPath}`)
