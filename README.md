@@ -1,6 +1,7 @@
 # trick-tinypng-cli
 
-Compress images in command lines. Free, and convenient.
+Compress images in command lines.
+Use tinypng.com API, but without API key, also free.
 
 ## install
 ```
