@@ -3,12 +3,12 @@
 Compress images in command lines. Free, and convenient.
 
 ## install
-```console
+```
 npm install -g trick-tinypng-cli
 ```
 
 ## Usage
-```console
+```
 tiny ./imgdir
 tiny ./img/test.png
 tiny ./imgdir1 ./imgdir2 ./img/test1.png ...
