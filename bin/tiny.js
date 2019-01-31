@@ -4,8 +4,9 @@ const fs = require('fs')
 const path = require('path')
 const fse = require('fs-extra')
 const chalk = require('chalk')
+const ora = require('ora')
 
-const {detailLog} = require('../src/log')
+const {detailLog, debugLog} = require('../src/log')
 
 const program = require('commander')
 
@@ -30,7 +31,15 @@ const cmdResolve = async () => {
             if (stat.isDirectory()) {
                 await compressImageInDir(resolvedPath, defaultExts, parallel, program.auto)
             } else {
-                await compressImage(resolvedPath, resolvedPath, true)
+                const spinner = ora(`compressing...`).start()
+                try {
+                    await compressImage(resolvedPath)
+                } catch (e) {
+                    console.error(chalk.red('\ncompress failed'))
+                    console.error(chalk.red(`message: ${e.message}`))
+                    debugLog(e.stack)
+                }
+                spinner.stop()
             }
             detailLog(chalk`{cyan resolve path end}`)
         } else {
